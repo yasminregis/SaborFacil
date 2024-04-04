@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Receitas</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .header {
+    background: linear-gradient(to right, #ff7f50, #c932b5); /* Degradê de laranja para lilás */
+    color: #fff;
+    padding: 15px; /* Reduzindo o padding da barra de título */
+    text-align: center;
+    display: flex; /* Permitindo alinhamento horizontal */
+    align-items: center; /* Alinhando itens verticalmente */
+  }
+
+  .title {
+    flex: 1; /* Permitindo que o título ocupe o espaço restante */
+    font-size: 20px; /* Reduzindo o tamanho do título */
+    margin: 0; /* Removendo margem padrão */
+  }
+
+  .fav-option {
+    padding: 10px;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .search-bar {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .recipe-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .recipe-card {
+    width: 120px;
+    height: 150px;
+    margin: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .recipe-card img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .recipe-card .recipe-title {
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="fav-option">Ver Favoritos</div> <!-- Movendo a opção "Ver Favoritos" para a esquerda -->
+  <h1 class="title">Receitas</h1> <!-- Centralizando e reduzindo o tamanho do título "Receitas" -->
+</div>
+
+<div class="search-bar">
+  <input type="text" placeholder="Qual receita você gostaria?">
+</div>
+
+<div class="recipe-container">
+  <!-- Aqui você pode adicionar os quadrados de receitas -->
+  <div class="recipe-card">
+    <img src="exemplo.jpg" alt="Receita 1">
+    <div class="recipe-title">Nome da Receita 1</div>
+  </div>
+  <div class="recipe-card">
+    <img src="exemplo.jpg" alt="Receita 2">
+    <div class="recipe-title">Nome da Receita 2</div>
+  </div>
+  <div class="recipe-card">
+    <img src="exemplo.jpg" alt="Receita 2">
+    <div class="recipe-title">Nome da Receita 2</div>
+  </div>
+  <div class="recipe-card">
+    <img src="exemplo.jpg" alt="Receita 2">
+    <div class="recipe-title">Nome da Receita 2</div>
+  </div>
+  <div class="recipe-card">
+    <img src="exemplo.jpg" alt="Receita 2">
+    <div class="recipe-title">Nome da Receita 2</div>
+  </div>
+  <div class="recipe-card">
+    <img src="exemplo.jpg" alt="Receita 2">
+    <div class="recipe-title">Nome da Receita 2</div>
+  </div>
+  <div class="recipe-card">
+    <img src="exemplo.jpg" alt="Receita 2">
+    <div class="recipe-title">Nome da Receita 2</div>
+  </div>
+  <div class="recipe-card">
+    <img src="exemplo.jpg" alt="Receita 2">
+    <div class="recipe-title">Nome da Receita 2</div>
+  </div>
+  <!-- Adicione mais quadrados de receitas conforme necessário -->
+</div>
+
+
+</body>
+</html>
