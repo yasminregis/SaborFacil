@@ -45,7 +45,7 @@
     color: #ca00afd3; /
   }
 
-  input[type="text"],
+  input[type="mail"],
   input[type="password"] {
     width: calc(100% - 40px); /* Reduzindo a largura dos campos de texto */
     padding: 8px; /* Reduzindo o padding dos campos de texto */
@@ -90,15 +90,15 @@
 
 <div class="container">
   <div class="logo">
-    
     <img src="caminho_para_o_logo.png" alt="Logo ">
   </div>
   <h2>SaborFácil</h2>
-  <form id="loginForm" action="#" method="post">
-    <input type="text" name="username" placeholder="Usuário" required>
-    <input type="password" name="password" placeholder="Senha" required>
-    <input type="submit" value="ENTRAR">
-  </form>
+  <!-- <form id="loginForm" action="#" method="post"> -->
+    <input id="email" type="mail" name="username" placeholder="Usuário" required>
+    <input id="senha" type="password" name="password" placeholder="Senha" required>
+    <!-- <input id="btLogin" type="submit" value="ENTRAR"> -->
+    <button id="btLogin">ENTRAR</button>
+  <!-- </form> -->
   <p class="message">Ainda não tem uma conta? <a href="cadastro.php">Cadastre-se</a></p>
   <p>Experimente entrar com:</p>
   <div class="social-icons">
@@ -106,6 +106,60 @@
     <a href="#"><i class="fab fa-facebook"></i></a>
   </div>
 </div>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAb7JGJBKFibDOKAEE6uDSJcpwM3aHKSfI",
+    authDomain: "log00-d4434.firebaseapp.com",
+    databaseURL: "https://log00-d4434-default-rtdb.firebaseio.com",
+    projectId: "log00-d4434",
+    storageBucket: "log00-d4434.appspot.com",
+    messagingSenderId: "673728963477",
+    appId: "1:673728963477:web:00091e41667e90d4894c9c",
+    measurementId: "G-GZPYK3W23D"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const analytics = getAnalytics(app);
+
+  document.getElementById('btLogin').addEventListener('click', function(){
+    const conta = document.getElementById('email').value
+    console.log("🚀 ~ document.getElementById ~ conta:", conta)
+    
+    const senha = document.getElementById('senha').value
+    console.log("🚀 ~ document.getElementById ~ senha:", senha)
+    
+    signInWithEmailAndPassword(auth, conta, senha)
+    .then((userCredential) => {
+      // Signed up 
+      const user = userCredential.user;
+      console.log("🚀 ~ .then ~ user:", user)
+      
+      localStorage.setItem("USER", JSON.stringify(user));
+      window.location.href = './receitas.html'
+      
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+    });
+
+  })
+
+
+</script>
 
 </body>
 </html>

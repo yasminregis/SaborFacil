@@ -12,18 +12,18 @@
   }
 
   .header {
-    background: linear-gradient(to right, #ff7f50, #c932b5); /* Degradê de laranja para lilás */
+    background: linear-gradient(to right, #ff7f50, #c932b5); 
     color: #fff;
-    padding: 15px; /* Reduzindo o padding da barra de título */
+    padding: 15px;
     text-align: center;
-    display: flex; /* Permitindo alinhamento horizontal */
-    align-items: center; /* Alinhando itens verticalmente */
+    display: flex; 
+    align-items: center;
   }
 
   .title {
-    flex: 1; /* Permitindo que o título ocupe o espaço restante */
-    font-size: 20px; /* Reduzindo o tamanho do título */
-    margin: 0; /* Removendo margem padrão */
+    flex: 1;
+    font-size: 20px;
+    margin: 0; 
   }
 
   .fav-option {
@@ -75,8 +75,8 @@
 <body>
 
 <div class="header">
-  <div class="fav-option">Ver Favoritos</div> <!-- Movendo a opção "Ver Favoritos" para a esquerda -->
-  <h1 class="title">Receitas</h1> <!-- Centralizando e reduzindo o tamanho do título "Receitas" -->
+  <div class="fav-option">Ver Favoritos</div> 
+  <h1 class="title">Receitas</h1>
 </div>
 
 <div class="search-bar">
@@ -84,7 +84,7 @@
 </div>
 
 <div class="recipe-container">
-  <!-- Aqui você pode adicionar os quadrados de receitas -->
+ 
   <div class="recipe-card">
     <img src="exemplo.jpg" alt="Receita 1">
     <div class="recipe-title">Nome da Receita 1</div>
@@ -117,9 +117,25 @@
     <img src="exemplo.jpg" alt="Receita 2">
     <div class="recipe-title">Nome da Receita 2</div>
   </div>
-  <!-- Adicione mais quadrados de receitas conforme necessário -->
+    
+  
+  
 </div>
+<script>
+  let usuario = JSON.parse(localStorage.getItem("USER"));
+  if(usuario != null){
+    console.log("🚀 ~ verificar se o token tá expirado:")
+  }
+  else{
+    console.log("🚀 ~ entrou else:")
+    window.location.href = './login.html'
+  }
+    
+  console.log("🚀 ~ usuario:", usuario)
 
+  
+  
+</script>
 
 </body>
 </html>
