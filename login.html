@@ -128,27 +128,19 @@
     measurementId: "G-GZPYK3W23D"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const analytics = getAnalytics(app);
 
   document.getElementById('btLogin').addEventListener('click', function(){
-    const conta = document.getElementById('email').value
-    console.log("🚀 ~ document.getElementById ~ conta:", conta)
-    
+    const conta = document.getElementById('email').value    
     const senha = document.getElementById('senha').value
-    console.log("🚀 ~ document.getElementById ~ senha:", senha)
-    
+
     signInWithEmailAndPassword(auth, conta, senha)
     .then((userCredential) => {
-      // Signed up 
-      const user = userCredential.user;
-      console.log("🚀 ~ .then ~ user:", user)
-      
+      const user = userCredential.user;      
       localStorage.setItem("USER", JSON.stringify(user));
-      window.location.href = './receitas.html'
-      
+      window.location.href = './receitas.html';
     })
     .catch((error) => {
       const errorCode = error.code;

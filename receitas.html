@@ -84,7 +84,6 @@
 </div>
 
 <div class="recipe-container">
- 
   <div class="recipe-card">
     <img src="exemplo.jpg" alt="Receita 1">
     <div class="recipe-title">Nome da Receita 1</div>
@@ -117,25 +116,8 @@
     <img src="exemplo.jpg" alt="Receita 2">
     <div class="recipe-title">Nome da Receita 2</div>
   </div>
-    
-  
-  
 </div>
-<script>
-  let usuario = JSON.parse(localStorage.getItem("USER"));
-  if(usuario != null){
-    console.log("🚀 ~ verificar se o token tá expirado:")
-  }
-  else{
-    console.log("🚀 ~ entrou else:")
-    window.location.href = './login.html'
-  }
-    
-  console.log("🚀 ~ usuario:", usuario)
-
-  
-  
-</script>
+<script src="services/auth.js"></script>
 
 </body>
 </html>
