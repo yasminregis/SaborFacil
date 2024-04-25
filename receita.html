@@ -98,7 +98,7 @@
 <body>
 
 <div class="header">
-  <a href="Categorias" class="fav-option">Voltar</a>
+  <a href="Categorias.html" class="fav-option">Voltar</a>
   <h1 class="title">Receita - Pao De Queijo Light</h1>
 </div>
 
@@ -150,7 +150,7 @@
         var divImg = document.querySelector('.recipe-info');
         var imgReceita = document.createElement('img');
         imgReceita.alt = data.nome;
-        imgReceita.src = "./assets/receita/pao-de-queijo.webp";
+        imgReceita.src = `./assets/receita/${data.srcImg}`;
         divImg.appendChild(imgReceita);
 
         var divIngredientes = document.querySelector('.ingredientes');        

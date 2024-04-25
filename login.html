@@ -143,6 +143,7 @@
       window.location.href = './categorias.html';
     })
     .catch((error) => {
+      alert("usuário ou senha estão incorretos")
       const errorCode = error.code;
       const errorMessage = error.message;
       // ..

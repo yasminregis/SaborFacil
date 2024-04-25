@@ -81,7 +81,7 @@
 </div>
 
 <div class="search-bar">
-  <input type="text" placeholder="Qual receita você gostaria?">
+  <input id="searchInput" type="text" placeholder="Qual receita você gostaria?">
 </div>
 
 <div class="recipe-container"> 
@@ -92,8 +92,34 @@
     const urlAtual = window.location.href;     
     const urlParams = new URLSearchParams(new URL(urlAtual).search);
     const parametroRecebido = urlParams.get('categoria');    
-    console.log('Valor do parâmetro recebido:', parametroRecebido);
     
+    var listaReceitasFiltrada;
+    function recarregar(lista){
+      var containerClen = document.querySelector('.recipe-container');
+      containerClen.innerHTML = '';
+      lista.forEach(function(receita){
+          var container = document.querySelector('.recipe-container');
+          var recipeCard = document.createElement('div');
+          recipeCard.className = 'recipe-card';
+          recipeCard.addEventListener('click', () => {
+              // Redirecione para a página desejada com um parâmetro
+              const parametro = receita.id; // Substitua pelo valor desejado
+              window.location.href = `./receita.html?receitaid=${parametro}`;
+          });
+          var novaImagem = document.createElement('img');
+          novaImagem.src = `./assets/receita/${receita.srcImg}`;
+          novaImagem.alt = receita.nome;
+          recipeCard.appendChild(novaImagem);
+
+          var recipeTitle = document.createElement('div'); 
+          recipeTitle.className = 'recipe-title';
+          recipeTitle.textContent = receita.nome;
+          recipeCard.appendChild(recipeTitle);
+          
+          container.appendChild(recipeCard);          
+        })
+    }
+
     axios.get('https://saborfacil-8d0e8-default-rtdb.firebaseio.com/receitas.json')
       .then(response => {
         const data = response.data;        
@@ -107,7 +133,8 @@
           ingredientes: r[1].ingredientes,
           srcImg: r[1].srcImg
         }))         
-        var listaReceitasFiltrada = listaReceitas.filter(r => r.categoria == parametroRecebido)
+        listaReceitasFiltrada = listaReceitas.filter(r => r.categoria == parametroRecebido)
+
         listaReceitasFiltrada.forEach(function(receita){
           var container = document.querySelector('.recipe-container');
           var recipeCard = document.createElement('div');
@@ -132,7 +159,16 @@
       })        
       .catch(error => {
         console.error('Erro ao buscar dados:', error);
-      });  
+      }); 
+      
+      const searchInput = document.getElementById('searchInput');
+
+        // Adicione um ouvinte de evento para o evento 'input'
+        searchInput.addEventListener('input', function() {
+            const userInput = searchInput.value;            
+            let novaLista = listaReceitasFiltrada.filter(r => r.nome.toLowerCase().includes(userInput.toLowerCase()));            
+            recarregar(novaLista)
+        });
 </script>
 </body>
 </html>
