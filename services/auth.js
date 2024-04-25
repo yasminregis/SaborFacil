@@ -16,12 +16,12 @@ function tokenValido() {
 
         now.setMinutes(now.getMinutes() + 10);
         if (expiration < now) {
-          window.location.href = './login.html';
+          window.location.href = './index.html';
         } 
       }
       else{
         
-        window.location.href = './login.html'
+        window.location.href = './index.html'
       }
       
   }
