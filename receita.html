@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Receita - Pao De Queijo Light</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+  }
+
+  .header {
+    background: linear-gradient(to right, #ff7f50, #c932b5);
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .title {
+    flex: 1;
+    font-size: 24px;
+    margin: 0;
+  }
+
+  .recipe-info {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .recipe-info img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .recipe-ingredients,
+  .recipe-instructions {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .recipe-ingredients h2,
+  .recipe-instructions h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .recipe-ingredients ul,
+  .recipe-instructions ol {
+    padding-left: 20px;
+    color: #666;
+  }
+
+  .recipe-ingredients li,
+  .recipe-instructions li {
+    margin-bottom: 10px;
+  }
+
+  .fav-option {
+    text-decoration: none;
+    color: #fff;
+    background-color: #ff7f50;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+  }
+
+  .fav-option:hover {
+    background-color: #c932b5;
+  }
+  .comentarios {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div class="header">
+  <a href="Categorias" class="fav-option">Voltar</a>
+  <h1 class="title">Receita - Pao De Queijo Light</h1>
+</div>
+
+<div class="recipe-info">
+  <!-- <img src="img/pao-de-queijo-light.jpg" alt="Ravioli"> -->
+</div>
+
+<div class="recipe-ingredients">
+  <h2>Ingredientes:</h2>
+  <ul class="ingredientes">    
+  </ul>
+</div>
+
+<div class="recipe-instructions">
+  <h2>Modo de Preparo:</h2>
+  <ol class="passos">
+  </ol>
+</div>
+<div class="comentarios">
+    <h2>Deixe um comentário:</h2>
+    <input type="text" id="campoComentario" placeholder="Digite seu comentário...">
+    <button onclick="adicionarComentario()">Enviar</button>
+    <div class="showComentarios">
+
+    </div>
+</div>
+
+<script src="services/auth.js"></script>
+<script>
+
+    // Obtém a URL atual
+    const urlAtual = window.location.href;    
+    // Analisa a URL para obter os parâmetros
+    const urlParams = new URLSearchParams(new URL(urlAtual).search);
+    // Obtém o valor do parâmetro chamado 'param'
+    const parametroRecebido = urlParams.get('receitaid');
+
+    // Use o valor do parâmetro conforme necessário
+    console.log('Valor do parâmetro recebido:', parametroRecebido);
+    var data;
+    axios.get(`https://saborfacil-8d0e8-default-rtdb.firebaseio.com/receitas/${parametroRecebido}.json`)
+      .then(response => {
+         data = response.data; 
+        console.log("🚀 ~ data:", data)
+        
+        var nomeReceita = document.querySelector('.title');
+        nomeReceita.textContent = data.nome;
+
+        var divImg = document.querySelector('.recipe-info');
+        var imgReceita = document.createElement('img');
+        imgReceita.alt = data.nome;
+        imgReceita.src = "./assets/receita/pao-de-queijo.webp";
+        divImg.appendChild(imgReceita);
+
+        var divIngredientes = document.querySelector('.ingredientes');        
+        data.ingredientes.forEach(function(itemIngre){            
+            var item = document.createElement('li');
+            item.textContent = itemIngre;
+            divIngredientes.appendChild(item)
+        });
+
+        var divPassos = document.querySelector('.passos');
+        data.passos.forEach(function(passo){
+            var item = document.createElement('li');
+            item.textContent = passo;
+            divPassos.appendChild(item)
+        });
+
+        var divComentarios = document.querySelector('.showComentarios');
+        data.comentarios.forEach(function(comenta){
+            var item = document.createElement('h3');
+            item.textContent = comenta;
+            divComentarios.appendChild(item)
+        });
+ 
+        
+      })        
+      .catch(error => {
+        console.error('Erro ao buscar dados:', error);
+      });
+
+      function adicionarComentario() {
+        
+        console.log("🚀 ~ adicionarComentario ~ parametroRecebido:", parametroRecebido)
+        console.log("🚀 ~ adicionarComentario ~ data:", data)
+        const campoTexto = document.getElementById('campoComentario');
+        const comentario = campoTexto.value;
+
+        data.comentarios.unshift(comentario);
+        // Aqui você pode fazer algo com o comentário, como enviá-lo para o servidor, etc.
+        console.log('Novo comentário:', comentario);
+        // Limpa o campo de texto
+
+
+        axios.put(`https://saborfacil-8d0e8-default-rtdb.firebaseio.com/receitas/${parametroRecebido}.json`, data)
+        .then(response => {
+            data = response.data
+        })
+        .catch(error => {
+            console.error('Erro ao atualizar os dados:', error);
+        });
+
+
+        campoTexto.value = '';
+
+        var divComentarios = document.querySelector('.showComentarios');
+        divComentarios.innerHTML = '';
+        data.comentarios.forEach(function(comenta){
+            var item = document.createElement('h3');
+            item.textContent = comenta;
+            divComentarios.appendChild(item)
+        });
+    }
+        
+        
+  
+</script>
+
+</body>
+</html>

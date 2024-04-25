@@ -84,43 +84,16 @@
   <input type="text" placeholder="Qual receita você gostaria?">
 </div>
 
-<div class="recipe-container">
-  <div class="recipe-card">
-    <img src="exemplo.jpg" alt="Receita 1">
-    <div class="recipe-title">Nome da Receita 1</div>
-  </div>
-  <div class="recipe-card">
-    <img src="exemplo.jpg" alt="Receita 2">
-    <div class="recipe-title">Nome da Receita 2</div>
-  </div>
-  <div class="recipe-card">
-    <img src="exemplo.jpg" alt="Receita 2">
-    <div class="recipe-title">Nome da Receita 2</div>
-  </div>
-  <div class="recipe-card">
-    <img src="exemplo.jpg" alt="Receita 2">
-    <div class="recipe-title">Nome da Receita 2</div>
-  </div>
-  <div class="recipe-card">
-    <img src="exemplo.jpg" alt="Receita 2">
-    <div class="recipe-title">Nome da Receita 2</div>
-  </div>
-  <div class="recipe-card">
-    <img src="exemplo.jpg" alt="Receita 2">
-    <div class="recipe-title">Nome da Receita 2</div>
-  </div>
-  <div class="recipe-card">
-    <img src="exemplo.jpg" alt="Receita 2">
-    <div class="recipe-title">Nome da Receita 2</div>
-  </div>
-  <div class="recipe-card">
-    <img src="exemplo.jpg" alt="Receita 2">
-    <div class="recipe-title">Nome da Receita 2</div>
-  </div>
+<div class="recipe-container"> 
 </div>
 <script src="services/auth.js"></script>
 
 <script>
+    const urlAtual = window.location.href;     
+    const urlParams = new URLSearchParams(new URL(urlAtual).search);
+    const parametroRecebido = urlParams.get('categoria');    
+    console.log('Valor do parâmetro recebido:', parametroRecebido);
+    
     axios.get('https://saborfacil-8d0e8-default-rtdb.firebaseio.com/receitas.json')
       .then(response => {
         const data = response.data;        
@@ -131,19 +104,21 @@
           categoria: r[1].categoria,
           nome: r[1].nome,
           modoPreparo: r[1].passos,
-          ingredientes: r[1].ingredientes
-        }))        
-        console.log("🚀 ~ listaReceitas ~ listaReceitas:", listaReceitas)
-          
-        listaReceitas.forEach(function(receita){
-          console.log("🚀 ~ listaReceitas.forEach ~ receita:", receita)
-
+          ingredientes: r[1].ingredientes,
+          srcImg: r[1].srcImg
+        }))         
+        var listaReceitasFiltrada = listaReceitas.filter(r => r.categoria == parametroRecebido)
+        listaReceitasFiltrada.forEach(function(receita){
           var container = document.querySelector('.recipe-container');
           var recipeCard = document.createElement('div');
           recipeCard.className = 'recipe-card';
-
+          recipeCard.addEventListener('click', () => {
+              // Redirecione para a página desejada com um parâmetro
+              const parametro = receita.id; // Substitua pelo valor desejado
+              window.location.href = `./receita.html?receitaid=${parametro}`;
+          });
           var novaImagem = document.createElement('img');
-          novaImagem.src = 'exemplo.jpg';
+          novaImagem.src = `./assets/receita/${receita.srcImg}`;
           novaImagem.alt = receita.nome;
           recipeCard.appendChild(novaImagem);
 
@@ -152,15 +127,12 @@
           recipeTitle.textContent = receita.nome;
           recipeCard.appendChild(recipeTitle);
           
-          container.appendChild(recipeCard);
-
-          
+          container.appendChild(recipeCard);          
         })
       })        
       .catch(error => {
         console.error('Erro ao buscar dados:', error);
-      });
-  
+      });  
 </script>
 </body>
 </html>

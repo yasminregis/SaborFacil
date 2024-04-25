@@ -140,7 +140,7 @@
     .then((userCredential) => {
       const user = userCredential.user;      
       localStorage.setItem("USER", JSON.stringify(user));
-      window.location.href = './receitas.html';
+      window.location.href = './categorias.html';
     })
     .catch((error) => {
       const errorCode = error.code;

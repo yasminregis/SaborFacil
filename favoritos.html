@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Favoritos</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Importando Font Awesome -->
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .header {
+    background: linear-gradient(to right, #ff7f50, #c932b5); /* Degradê de laranja para lilás */
+    color: #fff;
+    padding: 15px; /* Reduzindo o padding da barra de título */
+    text-align: center;
+    display: flex; /* Permitindo alinhamento horizontal */
+    align-items: center; /* Alinhando itens verticalmente */
+  }
+
+  .back-icon {
+    font-size: 24px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .title {
+    flex: 1; /* Permitindo que o título ocupe o espaço restante */
+    font-size: 20px; /* Reduzindo o tamanho do título */
+    margin: 0; /* Removendo margem padrão */
+  }
+
+  .recipe-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .recipe-card {
+    position: relative; /* Adicionando posição relativa */
+    width: 120px;
+    height: 150px;
+    margin: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    cursor: pointer; /* Adicionando cursor pointer para indicar clique */
+    transition: transform 0.2s ease; /* Adicionando transição suave */
+  }
+
+  .recipe-card:hover {
+    transform: translateY(-5px); /* Efeito de elevação ao passar o mouse */
+  }
+
+  .recipe-card img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .recipe-card .recipe-title {
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* Estilo para estrela de favoritos */
+  .favorite-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: #ff7f50; /* Cor da estrela */
+    font-size: 18px;
+  }
+
+  /* Estilo para receita favorita */
+  .favorite {
+    background-color: #ff7f50; /* Cor de fundo para indicar favorito */
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <i class="fas fa-arrow-left back-icon" onclick="goBack()"></i> <!-- Ícone de volta -->
+  <h1 class="title">Favoritos</h1> <!-- Centralizando e reduzindo o tamanho do título "Favoritos" -->
+</div>
+
+<div class="recipe-container" id="favorite-recipes">
+  <!-- Aqui serão exibidos os favoritos -->
+</div>
+
+<script>
+  // Função para voltar para a página anterior
+  function goBack() {
+    window.history.back();
+  }
+
+  // Função para exibir os favoritos salvos em localStorage
+  function displayFavorites() {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || []; // Recupera os favoritos de localStorage
+    const favoriteContainer = document.getElementById('favorite-recipes');
+
+    favoriteContainer.innerHTML = ''; // Limpa o conteúdo atual
+
+    favoriteRecipes.forEach(recipe => {
+      const recipeCard = document.createElement('div');
+      recipeCard.classList.add('recipe-card', 'favorite'); // Adiciona classe 'favorite' para estilizar como favorito
+
+      const favoriteIcon = document.createElement('i');
+      favoriteIcon.classList.add('fas', 'fa-star', 'favorite-icon'); // Ícone de estrela preenchida
+
+      const recipeImage = document.createElement('img');
+      recipeImage.src = recipe.image;
+      recipeImage.alt = recipe.title;
+
+      const recipeTitle = document.createElement('div');
+      recipeTitle.classList.add('recipe-title');
+      recipeTitle.textContent = recipe.title;
+
+      recipeCard.appendChild(favoriteIcon);
+      recipeCard.appendChild(recipeImage);
+      recipeCard.appendChild(recipeTitle);
+
+      favoriteContainer.appendChild(recipeCard);
+    });
+  }
+
+  // Chamando a função para exibir os favoritos ao carregar a página
+  window.onload = displayFavorites;
+</script>
+
+</body>
+</html>
