@@ -102,8 +102,7 @@
           var recipeCard = document.createElement('div');
           recipeCard.className = 'recipe-card';
           recipeCard.addEventListener('click', () => {
-              // Redirecione para a página desejada com um parâmetro
-              const parametro = receita.id; // Substitua pelo valor desejado
+              const parametro = receita.id; 
               window.location.href = `./receita.html?receitaid=${parametro}`;
           });
           var novaImagem = document.createElement('img');
