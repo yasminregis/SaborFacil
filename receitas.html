@@ -122,7 +122,6 @@
     axios.get('https://saborfacil-8d0e8-default-rtdb.firebaseio.com/receitas.json')
       .then(response => {
         const data = response.data;        
-        // Processa os dados obtidos        
         var array = Object.entries(data);        
         var listaReceitas = array.map(r => ({
           id: r[0],
