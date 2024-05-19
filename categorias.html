@@ -43,6 +43,10 @@
     border: 2px solid #ddd; 
     outline: none;
     font-size: 16px; 
+    /* Adicionando bordas arredondadas */
+    border-radius: 20px;
+    /* Adicionando margem para espaçamento */
+    margin-bottom: 10px;
   }
 
   .profile-icon {
@@ -119,19 +123,54 @@
     color: #ff7f50; /* Cor da estrela */
     font-size: 18px;
   }
+  .search-input {
+    width: 100%; 
+    padding: 10px; 
+    border-radius: 20px; 
+    border: 2px solid #ddd; 
+    outline: none;
+    font-size: 16px; 
+    /* Adicionando bordas arredondadas */
+    border-radius: 20px;
+    /* Adicionando margem para espaçamento */
+    margin-bottom: 10px;
+  }
+
+  .specific-options {
+    display: flex;
+    align-items: center;
+  }
+
+  .specific-options span {
+    margin-right: 10px;
+    color: white;
+    font-weight: bold;
+  }
+
+  .specific-options button {
+    margin-right: 10px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 20px; /* Bordas arredondadas */
+    background-color: orange; /* Cor laranja */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transição suave */
+  }
+
+  .specific-options button:hover {
+    background-color: rgb(3, 219, 3); /* Mudança de cor ao passar o mouse para verde */
+  }
+
 
   .favorite {
     background-color: #ff7f50; /* Cor de fundo para indicar favorito */
   }
-
-
 </style>
 <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
 
 </head>
 <body style="background-image: url('FUNDO.jpeg');">
-
-<body>
 
 <div class="navbar">
   <img src="nome.png" alt="Logo" class="logo">
@@ -141,11 +180,22 @@
   <i class="fas fa-user-circle profile-icon"></i>
 </div>
 
-<div class="recipe-container">
-  <!-- Aqui você pode adicionar os quadrados de receitas -->  
-
+<div class="navbar">
+  <div class="search-bar">
+    
+  </div>
+  <div class="specific-options">
+    <span>Comidas especiais:</span> 
+    <button onclick="searchSpecific('Festa Junina')">Festa Junina</button>
+    <button onclick="searchSpecific('Aniversário')">Aniversário</button>
+    <button onclick="searchSpecific('Dia dos Namorados')">Dia dos Namorados</button>
+    <button onclick="searchSpecific('Dia das Mães')">Dia das Mães</button>
+  </div>
 </div>
 
+<div class="recipe-container">
+  <!-- Aqui você pode adicionar os quadrados de receitas -->  
+</div>
 
 <div class="footer">
   <img src="nome.png" alt="Logo Sabor Fácil">
@@ -233,15 +283,10 @@
         console.error('Erro ao buscar dados:', error);
       }); 
       
-      const searchInput = document.getElementById('searchInput');
-  
-      // Adicione um ouvinte de evento para o evento 'input'
-      searchInput.addEventListener('input', function() {
-          const userInput = searchInput.value;            
-          let novaLista = listaCategorias.filter(r => r.categoria.toLowerCase().includes(userInput.toLowerCase()));            
-          recarregar(novaLista)
-      });
-  
-  </script>
+      function searchSpecific(option) {
+        // Aqui você pode fazer o que quiser com a opção selecionada
+        console.log(option);
+      }
+</script>
 </body>
 </html>
