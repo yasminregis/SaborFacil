@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Receitas</title>
 <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> 
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -71,12 +72,22 @@
     font-weight: bold;
     text-align: center;
   }
+  .favorite-icon {
+    position: relative;
+    width: 15px;
+    height: 15px;    
+    color: #ff7f50; /* Cor da estrela */
+    font-size: 18px;
+  }
+
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="fav-option">Ver Favoritos</div> 
+  <a href="favoritos.html">
+    <div class="fav-option">Ver Favoritos</div> 
+  </a>
   <h1 class="title">Receitas</h1>
 </div>
 
@@ -94,27 +105,58 @@
     const parametroRecebido = urlParams.get('categoria');    
     
     var listaReceitasFiltrada;
+    function verificaFarFas(favId){
+      const listaFav = JSON.parse(localStorage.getItem('favoriteRecipes')) || []; 
+      const indice = listaFav.indexOf(favId);
+      if(indice !== -1){
+        return 'fas'
+      }
+      return 'far';
+    }
+
+    function verificaFavorito(favId){
+      const listaFav = JSON.parse(localStorage.getItem('favoriteRecipes')) || []; 
+      const indice = listaFav.indexOf(favId);
+      if(indice !== -1){
+        return 'favorite'
+      }
+      return 'nofavorite';
+    }
+
     function recarregar(lista){
       var containerClen = document.querySelector('.recipe-container');
       containerClen.innerHTML = '';
       lista.forEach(function(receita){
           var container = document.querySelector('.recipe-container');
-          var recipeCard = document.createElement('div');
+          var recipeCard = document.createElement('div');          
           recipeCard.className = 'recipe-card';
-          recipeCard.addEventListener('click', () => {
-              const parametro = receita.id; 
-              window.location.href = `./receita.html?receitaid=${parametro}`;
-          });
+
+          var favorito = document.createElement('i'); 
+          favorito.className = "fa-star favorite-icon"
+          favorito.id = receita.id;
+          favorito.classList.add(verificaFarFas(receita.id))
+          favorito.classList.add(verificaFavorito(receita.id))
+          favorito.addEventListener('click', toggleFavorite);
+          recipeCard.appendChild(favorito);
+          
           var novaImagem = document.createElement('img');
           novaImagem.src = `./assets/receita/${receita.srcImg}`;
           novaImagem.alt = receita.nome;
+          novaImagem.addEventListener('click', () => {
+              // Redirecione para a página desejada com um parâmetro
+              const parametro = receita.id; // Substitua pelo valor desejado
+              window.location.href = `./receita.html?receitaid=${parametro}`;
+          });
           recipeCard.appendChild(novaImagem);
 
           var recipeTitle = document.createElement('div'); 
           recipeTitle.className = 'recipe-title';
           recipeTitle.textContent = receita.nome;
-          recipeCard.appendChild(recipeTitle);
-          
+              recipeTitle.addEventListener('click', () => {
+              const parametro = receita.id;
+              window.location.href = `./receita.html?receitaid=${parametro}`;
+          });
+          recipeCard.appendChild(recipeTitle);          
           container.appendChild(recipeCard);          
         })
     }
@@ -132,41 +174,43 @@
           srcImg: r[1].srcImg
         }))         
         listaReceitasFiltrada = listaReceitas.filter(r => r.categoria == parametroRecebido)
-
-        listaReceitasFiltrada.forEach(function(receita){
-          var container = document.querySelector('.recipe-container');
-          var recipeCard = document.createElement('div');
-          recipeCard.className = 'recipe-card';
-          recipeCard.addEventListener('click', () => {
-              // Redirecione para a página desejada com um parâmetro
-              const parametro = receita.id; // Substitua pelo valor desejado
-              window.location.href = `./receita.html?receitaid=${parametro}`;
-          });
-          var novaImagem = document.createElement('img');
-          novaImagem.src = `./assets/receita/${receita.srcImg}`;
-          novaImagem.alt = receita.nome;
-          recipeCard.appendChild(novaImagem);
-
-          var recipeTitle = document.createElement('div'); 
-          recipeTitle.className = 'recipe-title';
-          recipeTitle.textContent = receita.nome;
-          recipeCard.appendChild(recipeTitle);
-          
-          container.appendChild(recipeCard);          
-        })
+        recarregar(listaReceitasFiltrada)        
       })        
       .catch(error => {
         console.error('Erro ao buscar dados:', error);
-      }); 
-      
+      });      
       const searchInput = document.getElementById('searchInput');
+      // Adicione um ouvinte de evento para o evento 'input'
+      searchInput.addEventListener('input', function() {
+          const userInput = searchInput.value;            
+          let novaLista = listaReceitasFiltrada.filter(r => r.nome.toLowerCase().includes(userInput.toLowerCase()));            
+          recarregar(novaLista)
+      });
 
-        // Adicione um ouvinte de evento para o evento 'input'
-        searchInput.addEventListener('input', function() {
-            const userInput = searchInput.value;            
-            let novaLista = listaReceitasFiltrada.filter(r => r.nome.toLowerCase().includes(userInput.toLowerCase()));            
-            recarregar(novaLista)
-        });
+      function toggleFavorite(event) {
+        const favoritoCurrent = event.currentTarget;
+
+        favoritoCurrent.classList.toggle('favorite');        
+        favoritoCurrent.classList.toggle('fas'); // Adiciona classe 'fas' para preencher a estrela
+        favoritoCurrent.classList.toggle('far'); // Remove classe 'far' para estrela vazia
+        const listaFavoritos = JSON.parse(localStorage.getItem('favoriteRecipes')) || []; // Recupera os favoritos de localStorage
+        const indice = listaFavoritos.indexOf(favoritoCurrent.id);
+        if(favoritoCurrent.classList.contains('favorite')){
+          if(indice == -1){
+            listaFavoritos.push(favoritoCurrent.id)
+          }
+        }
+        else{          
+          if (indice !== -1) {
+            listaFavoritos.splice(indice, 1); // Remove o elemento
+          }
+        }
+      
+        localStorage.setItem('favoriteRecipes', JSON.stringify(listaFavoritos));
+      }
+      
+        
+
 </script>
 </body>
 </html>

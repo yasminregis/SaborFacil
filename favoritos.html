@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Favoritos</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Importando Font Awesome -->
-
+<script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -104,38 +104,114 @@
   function goBack() {
     window.history.back();
   }
+  function verificaFarFas(favId){
+      const listaFav = JSON.parse(localStorage.getItem('favoriteRecipes')) || []; 
+      const indice = listaFav.indexOf(favId);
+      if(indice !== -1){
+        return 'fas'
+      }
+      return 'far';
+    }
 
+    function verificaFavorito(favId){
+      const listaFav = JSON.parse(localStorage.getItem('favoriteRecipes')) || []; 
+      const indice = listaFav.indexOf(favId);
+      if(indice !== -1){
+        return 'favorite'
+      }
+      return 'nofavorite';
+    }
   // Função para exibir os favoritos salvos em localStorage
-  function displayFavorites() {
-    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || []; // Recupera os favoritos de localStorage
-    const favoriteContainer = document.getElementById('favorite-recipes');
-
-    favoriteContainer.innerHTML = ''; // Limpa o conteúdo atual
-
-    favoriteRecipes.forEach(recipe => {
-      const recipeCard = document.createElement('div');
-      recipeCard.classList.add('recipe-card', 'favorite'); // Adiciona classe 'favorite' para estilizar como favorito
-
-      const favoriteIcon = document.createElement('i');
-      favoriteIcon.classList.add('fas', 'fa-star', 'favorite-icon'); // Ícone de estrela preenchida
-
-      const recipeImage = document.createElement('img');
-      recipeImage.src = recipe.image;
-      recipeImage.alt = recipe.title;
-
-      const recipeTitle = document.createElement('div');
-      recipeTitle.classList.add('recipe-title');
-      recipeTitle.textContent = recipe.title;
-
-      recipeCard.appendChild(favoriteIcon);
-      recipeCard.appendChild(recipeImage);
-      recipeCard.appendChild(recipeTitle);
-
-      favoriteContainer.appendChild(recipeCard);
-    });
+  function displayFavorites() { 
+    var lista = [];   
+    axios.get('https://saborfacil-8d0e8-default-rtdb.firebaseio.com/receitas.json')
+      .then(response => {
+        const data = response.data;        
+        var array = Object.entries(data);        
+        var listaReceitas = array.map(r => ({
+          id: r[0],
+          categoria: r[1].categoria,
+          nome: r[1].nome,
+          modoPreparo: r[1].passos,
+          ingredientes: r[1].ingredientes,
+          srcImg: r[1].srcImg
+        }))        
+        const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+        listaReceitas.forEach(function(rec){
+          const existe = favoriteRecipes.includes(rec.id)
+          if(existe){
+            lista.push(rec);
+          }
+        })
+        recarregar(lista);
+        
+      })        
+      .catch(error => {
+        console.error('Erro ao buscar dados:', error);
+      });    
   }
+  function toggleFavorite(event) {
+        const favoritoCurrent = event.currentTarget;
+        favoritoCurrent.classList.toggle('favorite');        
+        favoritoCurrent.classList.toggle('fas');
+        favoritoCurrent.classList.toggle('far');
+        const listaFavoritos = JSON.parse(localStorage.getItem('favoriteRecipes')) || []; // Recupera os favoritos de localStorage
+        const indice = listaFavoritos.indexOf(favoritoCurrent.id);
+        if(favoritoCurrent.classList.contains('favorite')){
+          if(indice == -1){
+            listaFavoritos.push(favoritoCurrent.id)
+          }
+        }
+        else{          
+          if (indice !== -1) {
+            listaFavoritos.splice(indice, 1); // Remove o elemento
+          }
+        }
+        localStorage.setItem('favoriteRecipes', JSON.stringify(listaFavoritos));
+      }
 
-  // Chamando a função para exibir os favoritos ao carregar a página
+  function recarregar(lista){
+      // var containerClen = document.querySelector('.recipe-container');
+      // containerClen.innerHTML = '';
+      const favoriteContainer = document.getElementById('favorite-recipes');
+      favoriteContainer.innerHTML = ''; // Limpa o conteúdo atual
+
+      lista.forEach(function(receita){
+          var container = document.querySelector('.recipe-container');
+          var recipeCard = document.createElement('div');          
+          recipeCard.className = 'recipe-card';
+
+          var favorito = document.createElement('i'); 
+          favorito.className = "fa-star favorite-icon"
+          favorito.id = receita.id;
+          favorito.classList.add(verificaFarFas(receita.id))
+          favorito.classList.add(verificaFavorito(receita.id))
+          favorito.addEventListener('click', toggleFavorite);
+          recipeCard.appendChild(favorito);
+          
+          var novaImagem = document.createElement('img');
+          novaImagem.src = `./assets/receita/${receita.srcImg}`;
+          novaImagem.alt = receita.nome;
+          novaImagem.addEventListener('click', () => {
+              // Redirecione para a página desejada com um parâmetro
+              const parametro = receita.id; // Substitua pelo valor desejado
+              window.location.href = `./receita.html?receitaid=${parametro}`;
+          });
+          recipeCard.appendChild(novaImagem);
+
+          var recipeTitle = document.createElement('div'); 
+          recipeTitle.className = 'recipe-title';
+          recipeTitle.textContent = receita.nome;
+              recipeTitle.addEventListener('click', () => {
+              const parametro = receita.id;
+              window.location.href = `./receita.html?receitaid=${parametro}`;
+          });
+
+          recipeCard.appendChild(recipeTitle);
+          container.appendChild(recipeCard);          
+        })
+    }
+  
   window.onload = displayFavorites;
 </script>
 
