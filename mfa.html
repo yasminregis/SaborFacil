@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastro</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Preenchendo a tela inteira */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    width: 300px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  #btCadastro{
+    width: calc(100% - 200px); /* Reduzindo em 200px */
+    background-color: #f18e32;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 30px; 
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+  }
+
+  #btCadastro:hover {
+    background-color: #5fff50; 
+  }
+</style>
+</head>
+<body style="background-image: url('FUNDO.jpeg');">
+
+<body>
+
+<div class="container">
+  <h2>Cadastro</h2>
+  <!-- <form id="registerForm" action="#" method="post"> -->
+    <input type="text" name="name" placeholder="Nome" required>
+    <input type="email" id="telefone" name="telefone" placeholder="telefone" required>    
+    <!-- <input type="submit" id="btCadastro" value="CADASTRAR" style="margin-left: auto; margin-right: auto; display: block;">  -->
+    <button id="btMFA">ENTRAR</button>
+  <!-- </form> -->
+  <div id="recaptcha-container"></div>
+</div>
+<script type="module" >
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
+  import {
+    multiFactor, PhoneAuthProvider, PhoneMultiFactorGenerator,
+    RecaptchaVerifier, getAuth
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAb7JGJBKFibDOKAEE6uDSJcpwM3aHKSfI",
+    authDomain: "log00-d4434.firebaseapp.com",
+    databaseURL: "https://log00-d4434-default-rtdb.firebaseio.com",
+    projectId: "log00-d4434",
+    storageBucket: "log00-d4434.appspot.com",
+    messagingSenderId: "673728963477",
+    appId: "1:673728963477:web:00091e41667e90d4894c9c",
+    measurementId: "G-GZPYK3W23D"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const analytics = getAnalytics(app);
+  
+
+  const recaptchaVerifier = new RecaptchaVerifier(auth, "btMFA", {
+      "size": "invisible",
+      "callback": function(response) {
+          // reCAPTCHA solved, you can proceed with
+          // phoneAuthProvider.verifyPhoneNumber(...).
+          onSolvedRecaptcha();
+      }
+  });
+  console.log("🚀 ~ recaptchaVerifier:", recaptchaVerifier)
+  let user = JSON.parse(localStorage.getItem("USER"));
+    console.log("🚀 ~ user:", user)
+    
+  multiFactor(user).getSession()
+    .then(function (multiFactorSession) {
+        // Specify the phone number and pass the MFA session.
+        const phoneInfoOptions = {
+            phoneNumber: '5581988901516',
+            session: multiFactorSession
+        };
+        console.log("🚀 ~ phoneInfoOptions:", phoneInfoOptions)
+
+        const phoneAuthProvider = new PhoneAuthProvider(auth);
+        console.log("🚀 ~ phoneAuthProvider:", phoneAuthProvider)
+
+        // Send SMS verification code.
+        return phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, recaptchaVerifier);
+    }).then(function (verificationId) {
+        // Ask user for the verification code. Then:
+        const cred = PhoneAuthProvider.credential(verificationId, verificationCode);
+        const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
+
+        // Complete enrollment.
+        return multiFactor(user).enroll(multiFactorAssertion, 'mfaDisplayName');
+    });
+
+
+</script>
+</body>
+</html>
